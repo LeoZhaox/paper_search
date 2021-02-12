@@ -47,11 +47,13 @@ def preprocess_file(filename):
                 author, _ = Author.objects.get_or_create(name=author_name)
                 p.authors.add(author)
 
+preprocess_file('dblp-ref-2.json')
 
-for i in range(4):
-    t1 = threading.Thread(target=preprocess_file, args=('dblp-ref-2.json',))
-    print('t_{}'.format(i), 'is starting....')
-    t1.start()
+#
+# for i in range(4):
+#     t1 = threading.Thread(target=preprocess_file, args=('dblp-ref-2.json',))
+#     print('t_{}'.format(i), 'is starting....')
+#     t1.start()
 
 # preprocess_file('dblp-ref-3.json')
 # print(content)

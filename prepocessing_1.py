@@ -45,9 +45,9 @@ def preprocess_file(filename):
                 p.authors
             print(created_num)
 
-preprocess_file('dblp-ref-0.json')
-preprocess_file('dblp-ref-1.json')
-preprocess_file('dblp-ref-2.json')
+# preprocess_file('dblp-ref-0.json')
+# preprocess_file('dblp-ref-1.json')
+# preprocess_file('dblp-ref-2.json')
 # preprocess_file('dblp-ref-3.json')
 
 # print(content)
