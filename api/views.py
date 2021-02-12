@@ -38,4 +38,3 @@ def search(request):
         papers = TFIDF(key)
     serializer = PaperSerializer(papers, many=True)
     return Response(serializer.data)
-1--->stage---->commit
