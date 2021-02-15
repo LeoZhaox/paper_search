@@ -22,7 +22,6 @@ def preprocess_file(filename):
             created_num += 1
             print(threading.current_thread().name, created_num)
             res = json.loads(content)
-            # paper=a.get('authors')
             authors = res.get('authors')
             n_citation = res.get('n_citation')
             references = res.get('references')

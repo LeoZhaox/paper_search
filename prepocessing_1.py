@@ -22,7 +22,7 @@ def preprocess_file(filename):
             # paper=a.get('authors')
             authors = res.get('authors')
             n_citation = res.get('n_citation')
-            references = res.get('n_citation')
+            references = res.get('references')
             id = res.get('id')
             title = res.get('title')
             year = res.get('year')

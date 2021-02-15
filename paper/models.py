@@ -23,7 +23,6 @@ class Paper(models.Model):
     def __str__(self):
         return self.title
 
-
 class WordPosition(models.Model):
     word_name = models.CharField(max_length=128, verbose_name='word_name')
     paper = models.ForeignKey(Paper, verbose_name='paper', on_delete=models.CASCADE)

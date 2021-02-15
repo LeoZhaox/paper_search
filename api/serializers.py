@@ -1,26 +1,31 @@
 from rest_framework import serializers
+
 from paper.models import Paper, Author
 
 
+class AuthorSerializer(serializers.ModelSerializer):
+    def to_representation(self, value):
+        return value.name
+
+    class Meta:
+        model = Author
+
+
 class PaperSerializer(serializers.ModelSerializer):
-    # authors = serializers.SerializerMethodField()
+    authors = AuthorSerializer(many=True, read_only=True)
     references = serializers.SerializerMethodField()
-    #
+    year = serializers.SerializerMethodField()
+
     class Meta:
         model = Paper
-        fields = ['title', 'year', 'venue', 'abstract', 'n_citation', 'references', 'id', 'authors']
-
-    # def get_authors(self, obj):
-    # print(obj.authors)
-    # authors = Author.objects.filter(id__in=obj.authors)
-    # return [author.name for author in authors]
-    # return obj.authors
+        fields = '__all__'
 
     def get_references(self, obj):
-        print(obj.references)
-
+        if obj.references is None:
+            return obj.references
         papers = Paper.objects.filter(id__in=obj.references)
-        if papers is not None:
-            return [paper.title for paper in papers]
-        else:
-            return []
+        references = [paper.title for paper in papers]
+        return references
+
+    def get_year(self, obj):
+        return obj.year.strftime('%Y-%m-%d')
