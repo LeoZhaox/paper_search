@@ -25,7 +25,7 @@ def preprocess_file(filename):
             # paper=a.get('authors')
             authors = res.get('authors')
             n_citation = res.get('n_citation')
-            references = res.get('n_citation')
+            references = res.get('references')
             id = res.get('id')
             title = res.get('title')
             year = res.get('year')
@@ -49,7 +49,11 @@ def preprocess_file(filename):
 
 
 preprocess_file('dblp-ref-0.json')
-
+# git add .
+# git commit -m '  '
+# git push -u origin main
+#  1. 返回数据格式
+#  2. 80条api
 #
 # for i in range(4):
 #     t1 = threading.Thread(target=preprocess_file, args=('dblp-ref-0.json',))

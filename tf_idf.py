@@ -1,5 +1,6 @@
 import django
 import os
+import time
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'paper_search.settings')
 django.setup()
@@ -31,7 +32,7 @@ def search_terms_with_position(term_list):
     stemmer_porter = PorterStemmer()
     query_list = [stemmer_porter.stem(word) for word in term_without_sw]
     print(query_list)
-    con_engine = pymysql.connect(host='localhost', user='root', password='123456', database='paper', port=3306,
+    con_engine = pymysql.connect(host='localhost', user='root', password='ed2021', database='paper', port=3306,
                                  charset='utf8')
 
     sql_ = "select * from paper_wordposition;"
@@ -43,7 +44,7 @@ def search_terms_with_position(term_list):
     return df
 
 
-def TFIDF(str,return_number=80):
+def TFIDF(str, return_number=80):
     df = search_terms_with_position(str)
     docno_matrix = df.paper_id
     doc_list = []
@@ -66,14 +67,17 @@ def TFIDF(str,return_number=80):
         score_list.append(score)
     score_dic = {key: value for key, value in zip(doc_list, score_list)}
     sorted_score_list = sorted(score_dic.items(), key=lambda x: x[1], reverse=True)
-    if len(sorted_score_list) > 150:
-        sorted_score_list = sorted_score_list[:150]
-
     paper_ids = [paper[0] for paper in sorted_score_list]
-    print(paper_ids)
-    paper_objects = Paper.objects.filter(id__in=paper_ids)[:return_number]
+    # print(paper_ids)
+    # print(len(paper_ids))
+    paper_objects = Paper.objects.filter(id__in=paper_ids)[:return_number].order_by('-years')
+    print(len(paper_objects))
+    print([p.id for p in paper_objects])
     return paper_objects
 
 
 if __name__ == '__main__':
+    start = time.time()
     TFIDF('structure, structures include achieve feature, features, classify solve utf-8 utf8')
+    end = time.time()
+    print('spend', end - start)

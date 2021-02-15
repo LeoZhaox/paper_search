@@ -6,6 +6,9 @@ from django.db import models
 class Author(models.Model):
     name = models.CharField(verbose_name='author', max_length=255)
 
+    def __str__(self):
+        return self.name
+
 
 class Paper(models.Model):
     id = models.CharField(max_length=255, primary_key=True)
@@ -16,6 +19,9 @@ class Paper(models.Model):
     abstract = models.TextField(verbose_name="abstract", null=True)
     n_citation = models.IntegerField(verbose_name="citation", null=True)
     references = models.JSONField(verbose_name="references", null=True)
+
+    def __str__(self):
+        return self.title
 
 
 class WordPosition(models.Model):

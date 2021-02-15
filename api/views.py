@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+import time
 # Create your views here.
 from rest_framework.decorators import api_view
 from paper.models import Paper
@@ -23,6 +23,9 @@ def detail(request, paper_id):
 def search(request):
     key = request.GET.get('key')
     algorithm_type = request.GET.get('algorithm_type', '1')
+    order_by_date=request.GET.get('order')
+    if order_by_date==1:
+        pass
     algorithm_type = int(algorithm_type)
     print(request.data)
     'localhost:8000/search?key=nlp&algorithm_type=1'
@@ -36,5 +39,12 @@ def search(request):
     #     Paper.objects.filter(abstract__icontains=['name','dfs']|title__icontains=[]).order_by('-years')
     else:
         papers = TFIDF(key)
+    serializer = PaperSerializer(papers, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def test(request):
+    papers = Paper.objects.order_by('?')[:100]
     serializer = PaperSerializer(papers, many=True)
     return Response(serializer.data)
