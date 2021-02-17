@@ -1,7 +1,9 @@
 import datetime
 import json
 import os
+
 import django
+from django.db import IntegrityError
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'paper_search.settings')
 django.setup()
@@ -22,6 +24,7 @@ def preprocess_file(filename):
             created_num += 1
             print(threading.current_thread().name, created_num)
             res = json.loads(content)
+            # paper=a.get('authors')
             authors = res.get('authors')
             n_citation = res.get('n_citation')
             references = res.get('references')
@@ -34,28 +37,25 @@ def preprocess_file(filename):
 
             date = datetime.datetime(year=year, month=1, day=1, tzinfo=pytz.UTC)
             try:
-                p, created = Paper.objects.get_or_create(id=id,
-                                                         defaults={"title": title, 'year': date, 'abstract': abstract,
-                                                                   'references': references, 'n_citation': n_citation,
-                                                                   'venue': venue})
+                p = Paper.objects.create(id=id, title=title, year=date, abstract=abstract, references=references, venue=venue,n_citation=n_citation)
 
-            except Exception as e:
+                # p, created = Paper.objects.get_or_create(id=id,
+                #                                          defaults={"title": title, 'year': date, 'abstract': abstract,
+                #                                                    'references': references, 'n_citation': n_citation,
+                #                                                    'venue': venue})
+
+            except IntegrityError as e:
                 print('error', e, id)
-                pass
+                continue
             for author_name in authors:
                 author, _ = Author.objects.get_or_create(name=author_name)
                 p.authors.add(author)
 
 
 preprocess_file('dblp-ref-0.json')
-# git add .
-# git commit -m '  '
-# git push -u origin main
-#  1. 返回数据格式
-#  2. 80条api
-#
+
 # for i in range(4):
-#     t1 = threading.Thread(target=preprocess_file, args=('dblp-ref-0.json',))
+#     t1 = threading.Thread(target=preprocess_file, args=('dblp-ref-1.json',))
 #     print('t_{}'.format(i), 'is starting....')
 #     t1.start()
 
