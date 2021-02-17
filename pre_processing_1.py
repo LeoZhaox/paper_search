@@ -1,7 +1,9 @@
 import datetime
 import json
 import os
+
 import django
+from django.db import IntegrityError
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'paper_search.settings')
 django.setup()
@@ -35,14 +37,16 @@ def preprocess_file(filename):
 
             date = datetime.datetime(year=year, month=1, day=1, tzinfo=pytz.UTC)
             try:
-                p, created = Paper.objects.get_or_create(id=id,
-                                                         defaults={"title": title, 'year': date, 'abstract': abstract,
-                                                                   'references': references, 'n_citation': n_citation,
-                                                                   'venue': venue})
+                p = Paper.objects.create(id=id, title=title, year=date, abstract=abstract, references=references, venue=venue,n_citation=n_citation)
 
-            except Exception as e:
+                # p, created = Paper.objects.get_or_create(id=id,
+                #                                          defaults={"title": title, 'year': date, 'abstract': abstract,
+                #                                                    'references': references, 'n_citation': n_citation,
+                #                                                    'venue': venue})
+
+            except IntegrityError as e:
                 print('error', e, id)
-                pass
+                continue
             for author_name in authors:
                 author, _ = Author.objects.get_or_create(name=author_name)
                 p.authors.add(author)
