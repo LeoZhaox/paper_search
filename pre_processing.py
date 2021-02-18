@@ -3,7 +3,7 @@ import json
 import os
 
 import django
-from django.db import IntegrityError
+from django.db import IntegrityError, OperationalError
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'paper_search.settings')
 django.setup()
@@ -19,9 +19,7 @@ def preprocess_file(filename):
 
     with open(filename, 'r') as opener:
         contents = opener.readlines()
-
         # print(content)
-
         for content in contents:
             created_num += 1
             if created_num < saved:
@@ -39,14 +37,14 @@ def preprocess_file(filename):
             venue = res.get('venue')
             date = datetime.datetime(year=year, month=1, day=1, tzinfo=pytz.UTC)
             try:
-                p = Paper.objects.create(id=id, title=title, year=date, abstract=abstract, references=references, venue=venue,n_citation=n_citation)
+                p = Paper.objects.create(id=id, title=title, year=date, abstract=abstract, references=references, venue=venue, n_citation=n_citation)
 
                 # p, created = Paper.objects.get_or_create(id=id,
                 #                                          defaults={"title": title, 'year': date, 'abstract': abstract,
                 #                                                    'references': references, 'n_citation': n_citation,
                 #                                                    'venue': venue})
 
-            except IntegrityError as e:
+            except (IntegrityError, OperationalError) as e:
                 print('error', e, id)
                 continue
             for author_name in authors:
