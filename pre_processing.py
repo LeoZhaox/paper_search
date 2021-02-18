@@ -1,6 +1,7 @@
 import datetime
 import json
 import os
+
 import django
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'paper_search.settings')
@@ -9,17 +10,17 @@ from paper.models import Paper, Author
 import pytz
 import threading
 
+saved = Paper.objects.all().count()
+
 
 def preprocess_file(filename):
     created_num = 0
-
     with open(filename, 'r') as opener:
         contents = opener.readlines()
-
-        # print(content)
-
         for content in contents:
             created_num += 1
+            if created_num < saved:
+                continue
             print(threading.current_thread().name, created_num)
             res = json.loads(content)
             authors = res.get('authors')
@@ -31,7 +32,6 @@ def preprocess_file(filename):
             # print(res['abstract'])
             abstract = res.get('abstract')
             venue = res.get('venue')
-
             date = datetime.datetime(year=year, month=1, day=1, tzinfo=pytz.UTC)
             try:
                 p, created = Paper.objects.get_or_create(id=id,
@@ -40,7 +40,6 @@ def preprocess_file(filename):
                                                                    'venue': venue})
 
             except Exception as e:
-                print('error', e, id)
                 pass
             for author_name in authors:
                 author, _ = Author.objects.get_or_create(name=author_name)
@@ -48,6 +47,7 @@ def preprocess_file(filename):
 
 
 preprocess_file('dblp-ref-0.json')
+
 # git add .
 # git commit -m '  '
 # git push -u origin main
