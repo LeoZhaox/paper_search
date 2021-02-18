@@ -5,3 +5,5 @@ dblp-ref-2.json
 dblp-ref-3.json
 nohup.out
 .idea/
+__pycache__
+.DS_Store
