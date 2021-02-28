@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Acdemic Search</title>
+	<style>
+		.header {
+        	position: absolute;
+        	z-index: 1;
+       		top: 0;
+        	left: 0;
+        	width: 100%;
+        	height: 66px;
+        	background: rgb(255,255,255);
+        	border-bottom: 2px solid rgb(100,200,200);
+    	}
+    	.logo {
+        	float: left;
+        	font-size: 35px;
+        	line-height: 50px;
+        	margin: 5px 20px 0 10px;
+    	}
+    	a {
+            color: rgb(100,200,200);
+            text-decoration:none
+    	}
+    	.searchPart {
+        	float: left;
+        	margin-top: 8px;
+    	}
+    	.search {
+            padding-top: 5px;
+      		height: 30px;
+         	width:  450px;
+        	line-height: 50px;
+    	}
+    	.button {
+            font-size: 20px;
+            text-align: center;
+            color: rgb(255,255,255);
+            width: 120px;
+            height: 40px;
+            border: none;
+            background-color: rgb(100,200,200);
+    	}
+    	.container {
+        	width: 100%;
+        	margin-top: 70px;
+    	}
+    	.topside {
+    	    width: 100%;
+    	    border-bottom: 2px solid rgb(100,200,200);
+    	}
+    	.topleft {
+    		margin-left: 20px;
+    	    width: 300px;
+    	}
+    	.topmid{
+    		margin-left: 75px;
+    	    width: 900px;  
+    	}
+    	.topright {
+    		margin-left: 610px;
+    	    width: 300px;  
+    	}
+    	.order {
+            padding-top: 10px;
+      		height: 30px;
+         	width:  250px;
+        	line-height: 60px;
+    	}
+    	.lo1 {
+    	    color: rgb(100,200,200);
+            font-size: 30px;
+    	}
+    	.lo2 {
+    	    color: rgb(100,200,200);
+            font-size: 18px;
+    	}
+    	.lo3{
+    	    color: rgb(100,200,200);
+            font-size: 24px;
+    	}
+    	.leftside {
+    		float: left;
+    		width: 300px;
+    		height: 641px;
+        	border-right: 2px solid rgb(100,200,200);
+    	}
+    	.adelement {
+    		width: 300px;
+    		margin-top: 5px;
+    		margin-left: 20px;
+    	}
+    	.adbutton {
+    		width: 300px;
+    		margin-top: 15px;
+    		margin-left: 80px;
+    	}
+    	.rightside {
+    	    width: 1200px;
+    		margin-top: 65px;
+        	margin-left: 33px;
+        	margin-right: 10%;
+    	}
+    	.listcontainer {
+        	text-align: left;
+    	}
+    	.pages {
+        	margin-top: 30px;
+        	height: 33px;
+        	width: 94%;
+        	margin-left: 78px;
+    	}
+	</style>
+</head>
+<body>
+    <div class="header">
+		<div class="logo">
+            <a href="MainPage.html">Acdemic Search</a>
+        </div>
+        
+        <div class="searchPart" align="center">
+        <form  id="search" method="get" action="ResultPage.html">
+        	<input class="search" type="text" id="key" name="key" autoComplete="off" value=""> <!--autocomplete="off" -->
+            <button class="button" type="submit" id="sub-button">Search</button>
+        </form>
+    	</div>
+    	
+    	<div class="container">
+    		<div class="topside">
+    			<span class="topleft">
+    				<font class="lo1">Search Results</font>
+    			</span>
+    			<span class="topmid">
+    				<font class="lo2">(Returned time information string here.)</font>
+    			</span>
+    			<span class="topright">
+    				<select class="order">
+    					<option value ="TFIDF">TFIDF</option>
+						<option value ="BM25">BM25</option>
+						<option value="Citation">Citation</option>
+						<option value="Year1">Year(Increasing)</option>
+						<option value="Year2">Year(Decreasing)</option>
+    				</select>
+    			</span>
+    		</div>
+    		
+    		<div class="leftside">
+    			<form  id="adsearch" method="get" action="ResultPage.html">
+    				<div class="adelement">
+    					<font class="lo3">Year</font><br />
+    					<input class="order" type="text" id="adyear" name="adyear" autoComplete="off" value=""> <!--autocomplete="off" -->
+    				</div>
+    				<div class="adelement">
+    					<font class="lo3">Author</font><br />
+    					<input class="order" type="text" id="adauthor" name="adauthor" autoComplete="off" value=""> <!--autocomplete="off" -->
+    				</div>
+    				<div class="adelement">
+    					<font class="lo3">Publication Venue</font><br />
+    					<input class="order" type="text" id="advenue" name="advenue" autoComplete="off" value=""> <!--autocomplete="off" -->
+    				</div>
+    				<div class="adbutton" >
+    					<button class="button" type="submit" id="sub-button-ad">Filter</button>
+    				</div>
+    			</form>
+    	    </div>
+    	    
+    		<div class="rightside">
+    			<div class="listcontainer">
+            		<ol id="list">
+            		</ol>
+        		</div>
+        		<div class="pages">
+            		<div id="pageDiv"></div>
+        		</div>
+    		</div>
+    	</div>
+    </div> 
+</body>
+</html>

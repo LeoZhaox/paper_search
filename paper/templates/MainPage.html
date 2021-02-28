@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Acdemic Search</title>
+	<style type="text/css">
+	    .top {
+        	padding-top: 230px;
+    	}
+		.logo {
+			height: 100px;
+			width:  100%;
+    	}
+    	.lo {
+            color: rgb(100,200,200);
+            font-size: 45px;
+    	}
+    	.searchPart {
+        	height: 100px;
+        	width:  100%;
+    	}
+    	.search {
+            padding-top: 5px;
+      		height: 30px;
+         	width:  450px;
+        	line-height: 50px;
+    	}
+    	.button {
+            font-size: 20px;
+            text-align: center;
+            color: rgb(255,255,255);
+            width: 120px;
+            height: 40px;
+            border: none;
+            background-color: rgb(100,200,200);
+    	}
+	</style>
+</head>
+<body>
+	<div class="top"> </div>
+	
+    <div  class="logo" align="center">
+        <h1 class="lo">Academic Search</h1>
+    </div>
+    
+    <div  class="searchPart" align="center">
+    	<form  id="showDataForm" method="post" action="ResultPage.html">
+   	 	    <input class="search" type="text" id="key" name="key" placeholder="Please input here." autocomplete="off" value=""> <!--autocomplete="off" -->
+            <button class="button" type="submit" id="sub-button">Search</button>
+    	</form>
+    </div>
+</body>
+</html>

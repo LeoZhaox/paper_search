@@ -1,0 +1,6 @@
+mysqlclient
+pymysql==0.9.3
+django
+django-rest-swagger
+nltk
+pandas
