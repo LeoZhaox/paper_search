@@ -9,6 +9,7 @@ from tf_idf import TFIDF
 from bm25 import BM25
 from django.core.cache import cache
 
+
 # from tf_idf import tf_idf
 # from bm25 import bm_25c
 
@@ -36,17 +37,18 @@ def search(request):
     # order: 1:year 2: citation
     # descend: 1 降序 2: 升序
     # 排序
-    order_by_date = int(request.GET.get('order'))
+    order_by_date = request.GET.get('order')
     descend = request.GET.get('descend')
+
     print(order_by_date, descend)
     if descend == '1':
         descend = True
     else:
         descend = False
-    if order_by_date == 1:
+    if order_by_date == '1':
         papers = sorted(papers, key=lambda x: x.year, reverse=descend)
 
-    elif order_by_date == 2:
+    elif order_by_date == '2':
         papers = sorted(papers, key=lambda x: x.n_citation, reverse=descend)
     # History.objects.create();
     print(request.data)

@@ -20,7 +20,7 @@ def read_paper_length(filename):
             except IntegrityError:
                 continue
             number += 1
-            # print('created', number, paper_id)
+            print('created', number, paper_id)
 
 
 import os
