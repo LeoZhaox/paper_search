@@ -24,8 +24,7 @@ class PaperSerializer(serializers.ModelSerializer):
         if obj.references is None:
             return obj.references
         papers = Paper.objects.filter(id__in=obj.references)
-        references = [paper.title for paper in papers]
-        return references
+        return papers
 
     def get_year(self, obj):
         return obj.year.strftime('%Y-%m-%d')
