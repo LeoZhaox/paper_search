@@ -14,6 +14,7 @@ import pandas as pd
 total_document_number = 10000
 import re
 
+
 def search_terms_with_position(term_list):
     combine_list_fixed = []
     r = '[’!"#$%&\'()*+,./;<=>?@[\\]^_`{|}~\t。！，]+'
@@ -33,14 +34,18 @@ def search_terms_with_position(term_list):
     print(query_list)
     con_engine = pymysql.connect(host='localhost', user='root', password='ed2021', database='paper', port=3306,
                                  charset='utf8')
-
-    sql_ = "select * from paper_wordposition;"
+    # select *
+    # from paper_wordposition where
+    # word_name in ('base', 'tool', 'includ', 'achiev', 'featur', 'featur', 'classifi', 'solv', 'utf-8', 'utf8');
+    query_list = ["'{}'".format(q) for q in query_list]
+    query_string = '(' + ','.join(query_list) + ')';
+    print(query_string)
+    sql_ = "select * from paper_wordposition where word_name in {};".format(query_string);
+    print(sql_)
+    # ['001c8744-73c4-4b04-9364-22d31a10dbf1']
     df_data = pd.read_sql(sql_, con_engine)
     print('after querying', query_list)
-    for query in query_list:
-        df1 = df_data[df_data.word_name == query]
-        df = df.append(df1)
-    return df
+    return df_data
 
 
 def TFIDF(str, return_number=80):
