@@ -23,4 +23,5 @@ def read_paper_length(filename):
             print('created', number, paper_id)
 
 
+PaperLength.objects.all().delete()
 read_paper_length('/root/doc_length_10w.csv')
