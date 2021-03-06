@@ -17,12 +17,9 @@ def preprocess_file(filename):
     created_num = 0
     with open(filename, 'r') as opener:
         contents = opener.readlines()
+        print(threading.current_thread().name, created_num)
         # print(content)
         for content in contents:
-            created_num += 1
-            if created_num < 100000:
-                continue
-            print(threading.current_thread().name, created_num)
             res = json.loads(content)
             authors = res.get('authors')
             n_citation = res.get('n_citation')
@@ -30,17 +27,16 @@ def preprocess_file(filename):
             id = res.get('id')
             title = res.get('title')
             year = res.get('year')
+            abstract = res.get('abstract')
             # print(res['abstract'])
             venue = res.get('venue')
             date = datetime.datetime(year=year, month=1, day=1, tzinfo=pytz.UTC)
             try:
-                p = Paper.objects.create(id=id, title=title, year=date, references=references, venue=venue, n_citation=n_citation)
-
-                # p, created = Paper.objects.get_or_create(id=id,
-                #                                          defaults={"title": title, 'year': date, 'abstract': abstract,
-                #                                                    'references': references, 'n_citation': n_citation,
-                #                                                    'venue': venue})
-
+                created_num += 1
+                if created_num < 100000:
+                    p = Paper.objects.create(id=id, title=title, year=date, references=references, venue=venue, n_citation=n_citation, abstract=abstract)
+                else:
+                    p = Paper.objects.create(id=id, title=title, year=date, references=references, abstract='', venue=venue, n_citation=n_citation)
             except (IntegrityError, OperationalError) as e:
                 print('error', e, id)
                 continue
