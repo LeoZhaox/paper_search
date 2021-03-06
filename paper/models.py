@@ -25,7 +25,7 @@ class Paper(models.Model):
 
 
 class WordPosition(models.Model):
-    word_name = models.CharField(max_length=128, verbose_name='word_name')
+    word_name = models.CharField(max_length=512, verbose_name='word_name')
     frequency = models.IntegerField(verbose_name='frequency',default=0)
     tf_idf = models.TextField(verbose_name='tf_idf')
     # paper = models.ForeignKey(Paper, verbose_name='paper', on_delete=models.CASCADE)
