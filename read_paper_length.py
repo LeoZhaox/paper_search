@@ -23,11 +23,4 @@ def read_paper_length(filename):
             print('created', number, paper_id)
 
 
-import os
-
-files = os.listdir('.')
-
-for file in files:
-    if file.startswith('doc_length'):
-        print('write file', file)
-        read_paper_length(file)
+read_paper_length('/root/doc_length_10w.csv')
