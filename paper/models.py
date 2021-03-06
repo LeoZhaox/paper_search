@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # Create your models here.
 
 class Author(models.Model):
@@ -7,6 +8,7 @@ class Author(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Paper(models.Model):
     id = models.CharField(max_length=255, primary_key=True)
@@ -21,10 +23,13 @@ class Paper(models.Model):
     def __str__(self):
         return self.title
 
+
 class WordPosition(models.Model):
     word_name = models.CharField(max_length=128, verbose_name='word_name')
-    paper = models.ForeignKey(Paper, verbose_name='paper', on_delete=models.CASCADE)
-    position = models.JSONField(verbose_name='word_position')
+    frequency = models.IntegerField(verbose_name='frequency',default=0)
+    tf_idf = models.TextField(verbose_name='tf_idf')
+    # paper = models.ForeignKey(Paper, verbose_name='paper', on_delete=models.CASCADE)
+    # position = models.JSONField(verbose_name='word_position')
 
 
 class PaperLength(models.Model):

@@ -11,18 +11,16 @@ from paper.models import Paper, Author
 import pytz
 import threading
 
-saved = Paper.objects.all().count()
 
-
+# saved = Paper.objects.all().count()
 def preprocess_file(filename):
     created_num = 0
-
     with open(filename, 'r') as opener:
         contents = opener.readlines()
         # print(content)
         for content in contents:
             created_num += 1
-            if created_num < saved:
+            if created_num < 100000:
                 continue
             print(threading.current_thread().name, created_num)
             res = json.loads(content)
@@ -33,11 +31,10 @@ def preprocess_file(filename):
             title = res.get('title')
             year = res.get('year')
             # print(res['abstract'])
-            abstract = res.get('abstract')
             venue = res.get('venue')
             date = datetime.datetime(year=year, month=1, day=1, tzinfo=pytz.UTC)
             try:
-                p = Paper.objects.create(id=id, title=title, year=date, abstract=abstract, references=references, venue=venue, n_citation=n_citation)
+                p = Paper.objects.create(id=id, title=title, year=date, references=references, venue=venue, n_citation=n_citation)
 
                 # p, created = Paper.objects.get_or_create(id=id,
                 #                                          defaults={"title": title, 'year': date, 'abstract': abstract,
@@ -53,4 +50,3 @@ def preprocess_file(filename):
 
 
 preprocess_file('dblp-ref-0.json')
-
