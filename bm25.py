@@ -34,18 +34,18 @@ def search_terms_with_position(term_list):
     print(query_list)
     con_engine = pymysql.connect(host='localhost', user='root', password='ed2021', database='paper', port=3306,
                                  charset='utf8')
-
-    sql_ = "select * from paper_wordposition;"
+    query_list = ["'{}'".format(q) for q in query_list]
+    query_string = '(' + ','.join(query_list) + ')';
+    sql_ = "select * from paper_wordposition where word_name in {};".format(query_string);
+    # ['001c8744-73c4-4b04-9364-22d31a10dbf1']
     df_data = pd.read_sql(sql_, con_engine)
     print('after querying', query_list)
-    for query in query_list:
-        df1 = df_data[df_data.word_name == query]
-        df = df.append(df1)
-    return df
+    return df_data
+
 
 def BM25(str, return_number=80):
     df = search_terms_with_position(str)
-    docno_matrix = df.paper_id
+    docno_matrix = df.paper_idc
     doc_list = []
     for list in docno_matrix:
         if not list in doc_list:
@@ -67,7 +67,7 @@ def BM25(str, return_number=80):
         for i in range(len(docno_position)):
             position = docno_position[i].split(',')
             score += math.log((total_document_number - len(df[df.word_name == word_name[i]]) + 0.5) / (
-                    len(df[df.word_name == word_name[i]]) + 0.5), 10) * (
+                    len(df[df.word_name == word_name[i]]) + 0.5), 10)c * (
                              len(position) / (1.5 * (L / L_mean) + len(position) + 0.5))
             score = round(score, 4)
         score_list.append(score)
