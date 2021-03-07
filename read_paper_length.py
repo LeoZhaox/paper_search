@@ -4,6 +4,7 @@ import os
 import django
 from django.db import IntegrityError
 
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'paper_search.settings')
 django.setup()
 from paper.models import PaperLength
@@ -23,11 +24,5 @@ def read_paper_length(filename):
             print('created', number, paper_id)
 
 
-import os
-
-files = os.listdir('.')
-
-for file in files:
-    if file.startswith('doc_length'):
-        print('write file', file)
-        read_paper_length(file)
+PaperLength.objects.all().delete()
+read_paper_length('/root/doc_length_10w.csv')
