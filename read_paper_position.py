@@ -24,7 +24,7 @@ def read_word_position(filename):
 
 
 WordPosition.objects.all().delete()
-read_word_position('/root/word_position_10w.csv')
+read_word_position('./word_position_10w.csv')
 # files = os.listdir('.')
 # for file in files:
 #     if file.startswith('word_position'):

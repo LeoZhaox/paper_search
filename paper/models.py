@@ -26,7 +26,7 @@ class Paper(models.Model):
 
 class WordPosition(models.Model):
     word_name = models.CharField(max_length=512, verbose_name='word_name')
-    frequency = models.IntegerField(verbose_name='frequency',default=0)
+    frequency = models.IntegerField(verbose_name='frequency', default=0)
     tf_idf = models.TextField(verbose_name='tf_idf')
     # paper = models.ForeignKey(Paper, verbose_name='paper', on_delete=models.CASCADE)
     # position = models.JSONField(verbose_name='word_position')
@@ -35,3 +35,8 @@ class WordPosition(models.Model):
 class PaperLength(models.Model):
     paper = models.ForeignKey(Paper, verbose_name='paper', on_delete=models.CASCADE)
     length = models.IntegerField(verbose_name='paper_length')
+
+
+class QuerySearch(models.Model):
+    word = models.CharField(verbose_name='word', max_length=512,unique=True)
+    papers = models.JSONField(verbose_name='papers_id')

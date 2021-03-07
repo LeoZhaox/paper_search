@@ -25,4 +25,4 @@ def read_paper_length(filename):
 
 
 PaperLength.objects.all().delete()
-read_paper_length('/root/doc_length_10w.csv')
+read_paper_length('./doc_length_10w.csv')

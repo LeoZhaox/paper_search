@@ -2,12 +2,13 @@ from django.shortcuts import render
 import time
 # Create your views here.
 from rest_framework.decorators import api_view
-from paper.models import Paper
+from paper.models import Paper, QuerySearch
 from rest_framework.response import Response
 from api.serializers import PaperSerializer
 from tf_idf import TFIDF
 from bm25 import BM25
 from django.core.cache import cache
+from Search_function import _query_search
 
 
 # from tf_idf import tf_idf
@@ -66,5 +67,20 @@ def test(request):
     serializer = PaperSerializer(papers, many=True)
     return Response(serializer.data)
 
+
 # def list_history():
 # redis.set(''
+@api_view(['GET'])
+def auto_query_suggestion(request):
+    # Get the input *
+    _input = request.GET.get('key')
+    # search the data base and get the recommended id list
+    n_words = _query_search(_input)
+    print('n_words', n_words)
+    search_res = QuerySearch.objects.get(word=n_words)
+    paper_ids = search_res.papers
+    print('paper ids', paper_ids)
+    'apple_tree'
+    papers = Paper.objects.filter(id__in=paper_ids)
+    serializer = PaperSerializer(papers, many=True)
+    return Response(serializer.data)

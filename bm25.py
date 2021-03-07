@@ -67,7 +67,7 @@ def BM25(str, return_number=80):
         for i in range(len(docno_position)):
             position = docno_position[i].split(',')
             score += math.log((total_document_number - len(df[df.word_name == word_name[i]]) + 0.5) / (
-                    len(df[df.word_name == word_name[i]]) + 0.5), 10)c * (
+                    len(df[df.word_name == word_name[i]]) + 0.5), 10) * (
                              len(position) / (1.5 * (L / L_mean) + len(position) + 0.5))
             score = round(score, 4)
         score_list.append(score)
