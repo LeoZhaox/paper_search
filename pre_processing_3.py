@@ -32,12 +32,11 @@ def preprocess_file(filename):
             title = res.get('title')
             year = res.get('year')
             # print(res['abstract'])
-            abstract = res.get('abstract')
             venue = res.get('venue')
 
             date = datetime.datetime(year=year, month=1, day=1, tzinfo=pytz.UTC)
             try:
-                p = Paper.objects.create(id=id, title=title, year=date, abstract=abstract, references=references, venue=venue,n_citation=n_citation)
+                p = Paper.objects.create(id=id, title=title, year=date, references=references, venue=venue, n_citation=n_citation)
 
                 # p, created = Paper.objects.get_or_create(id=id,
                 #                                          defaults={"title": title, 'year': date, 'abstract': abstract,
