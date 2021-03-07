@@ -4,6 +4,7 @@ import os
 import django
 from django.db import IntegrityError
 
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'paper_search.settings')
 django.setup()
 from paper.models import PaperLength
