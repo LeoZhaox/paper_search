@@ -45,6 +45,7 @@ def search_terms_with_position(term_list):
     # ['001c8744-73c4-4b04-9364-22d31a10dbf1']
     df_data = pd.read_sql(sql_, con_engine)
     print('after querying', query_list)
+    # print(df_data.head())
     return df_data
 
 

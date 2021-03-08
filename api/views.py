@@ -9,6 +9,8 @@ from tf_idf import TFIDF
 from bm25 import BM25
 from django.core.cache import cache
 from Search_function import _query_search
+from datetime import datetime
+import pytz
 
 
 # from tf_idf import tf_idf
@@ -33,15 +35,12 @@ def search(request):
             papers = BM25(key)
         else:
             papers = TFIDF(key)
-    # 127.0.0.1: 8000 / api / search?key = design & alogorithm = 1 & order = 1 & descend = 1
-
+    # 127.0.0.1: 8000 / api / search?key = design & alogorithm = 1 & order = 1 & descend = 1&year=2015-2020&author=abc&venue=ccf
     # order: 1:year 2: citation
     # descend: 1 降序 2: 升序
     # 排序
     order_by_date = request.GET.get('order')
     descend = request.GET.get('descend')
-
-    print(order_by_date, descend)
     if descend == '1':
         descend = True
     else:
@@ -51,8 +50,40 @@ def search(request):
 
     elif order_by_date == '2':
         papers = sorted(papers, key=lambda x: x.n_citation, reverse=descend)
+    # filter
+    year = request.GET.get('year')
+    if year is not None:
+        begin, end = year.split('-')
+        temp = []
+
+        for paper in papers:
+            # localhost:8000/api/test?key=design&alogorithm=1&order=1&descend=1&year=2013-2014
+            # localhost:8000/api/test?key=design&alogorithm=1&order=1&descend=1
+            begin_date = datetime(year=int(begin), month=1, day=1, tzinfo=pytz.utc)
+            end_date = datetime(year=int(end), month=1, day=1, tzinfo=pytz.utc)
+            if paper.year <= end_date and paper.year >= begin_date:
+                temp.append(paper)
+        papers = temp
+    author = request.GET.get('author')
+    if author is not None:
+        temp = []
+        for paper in papers:
+            exist = paper.authors.filter(name=author).exists()
+            print('author', author)
+            print('exist', exist)
+            if exist:
+                temp.append(paper)
+        papers = temp
+    venue = request.GET.get('venue')
+    if venue is not None:
+        temp = []
+        for paper in papers:
+            if paper.venue == venue:
+                temp.append(paper)
+        papers = temp
+    #
     # History.objects.create();
-    print(request.data)
+
     'localhost:8000/search?key=nlp&algorithm_type=1'
     'localhost:8000/search?key=nlp'
     # print('key', key)
@@ -63,7 +94,50 @@ def search(request):
 
 @api_view(['GET'])
 def test(request):
-    papers = Paper.objects.order_by('?')[:100]
+    papers = Paper.objects.all()[:100]
+    order_by_date = request.GET.get('order')
+    descend = request.GET.get('descend')
+    if descend == '1':
+        descend = True
+    else:
+        descend = False
+    if order_by_date == '1':
+        papers = sorted(papers, key=lambda x: x.year, reverse=descend)
+
+    elif order_by_date == '2':
+        papers = sorted(papers, key=lambda x: x.n_citation, reverse=descend)
+    # filter
+    year = request.GET.get('year')
+    if year is not None:
+        begin, end = year.split('-')
+        temp = []
+
+        for paper in papers:
+            # localhost:8000/api/test?key=design&alogorithm=1&order=1&descend=1&year=2013-2014
+            # localhost:8000/api/test?key=design&alogorithm=1&order=1&descend=1
+            begin_date = datetime(year=int(begin), month=1, day=1, tzinfo=pytz.utc)
+            end_date = datetime(year=int(end), month=1, day=1, tzinfo=pytz.utc)
+            if paper.year <= end_date and paper.year >= begin_date:
+                temp.append(paper)
+        papers = temp
+    author = request.GET.get('author')
+    if author is not None:
+        temp = []
+        for paper in papers:
+            exist = paper.authors.filter(name=author).exists()
+            print('author', author)
+            print('exist', exist)
+            if exist:
+                temp.append(paper)
+        papers = temp
+    venue = request.GET.get('venue')
+    if venue is not None:
+        temp = []
+        for paper in papers:
+            if paper.venue == venue:
+                temp.append(paper)
+        papers = temp
+    # History.objects.create();
     serializer = PaperSerializer(papers, many=True)
     return Response(serializer.data)
 

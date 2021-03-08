@@ -9,3 +9,4 @@ __pycache__
 .DS_Store
 *.csv
 paper.zip
+query_suggestions.csv
