@@ -24,7 +24,7 @@ SECRET_KEY = '2j%7n0(yxn(2uvg3via-8lu)vd08qa-ld(28%ux-^s+8hmk8p8'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['www.ttdspapersearch.me', '127.0.0.1', 'localhost', 'ttdspapersearch.me']
+ALLOWED_HOSTS = ['www.ttdspapersearch.me', '127.0.0.1', 'localhost', 'ttdspapersearch.me','178.62.121.103']
 
 # Application definition
 

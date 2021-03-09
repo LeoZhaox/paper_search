@@ -17,6 +17,7 @@ qs = QuerySearch.objects.all()
 for q in qs:
     papers = q.papers
     for p in papers:
-        exitst = Paper.objects.filter(id=p).exists()
-        if exitst:
+        ex=Paper.objects.filter(id=p)
+        if ex:
             print('exitst', q.word,q.papers)
+            break
