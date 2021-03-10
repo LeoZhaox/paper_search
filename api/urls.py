@@ -7,7 +7,9 @@ urlpatterns = [
     path("detail/<str:paper_id>", views.detail, name="detail"),
     path("search", views.search, name="search"),
     path("test", views.test, name="test"),
-    path("query_suggestion", views.auto_query_suggestion, name="query_suggestion")
+    path("query_suggestion", views.auto_query_suggestion, name="query_suggestion"),
+    path("similarity", views.similarity_paper, name="similarity"),
+    path("check_grammar", views.check_grammar, name="check_grammar"),
 ]
 
 '1. localhost:8000/api/detail/<paper_id>'

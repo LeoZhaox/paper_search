@@ -5,7 +5,7 @@ query_a = 'a new aloirthm '
 query_b = 'computer science'
 query_a = 'ff'
 
-from bm25 import BM25
+from bm25_old import BM25
 
 
 def timer(func):

@@ -10,3 +10,4 @@ __pycache__
 *.csv
 paper.zip
 query_suggestions.csv
+word_10000.csv

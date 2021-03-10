@@ -4,3 +4,4 @@ django
 django-rest-swagger
 nltk
 pandas
+Levenshtein

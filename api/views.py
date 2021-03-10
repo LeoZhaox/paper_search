@@ -11,6 +11,9 @@ from django.core.cache import cache
 from Search_function import _query_search
 from datetime import datetime
 import pytz
+from similar_recommend import find_similar
+from grammer import check_grammer
+from django.http import JsonResponse
 
 
 # from tf_idf import tf_idf
@@ -36,6 +39,7 @@ def search(request):
         else:
             papers = TFIDF(key)
     # 127.0.0.1: 8000 / api / search?key = design & alogorithm = 1 & order = 1 & descend = 1&year=2015-2020&author=abc&venue=ccf
+    # alogorithm 1 代表 tfidf， 2代表bm25，order 1 year，2citation；descend 1 降序，2 升序；后面就是按照输入过滤了
     # order: 1:year 2: citation
     # descend: 1 降序 2: 升序
     # 排序
@@ -158,3 +162,20 @@ def auto_query_suggestion(request):
     papers = Paper.objects.filter(id__in=paper_ids)
     serializer = PaperSerializer(papers, many=True)
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+def similarity_paper(request):
+    paper_id = request.GET.get('id')
+    paper = Paper.objects.get(id=paper_id)
+    papers = find_similar(paper.title)
+    serializer = PaperSerializer(papers, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def check_grammar(request):
+    sentence = request.GET.get('sentence')
+    res = check_grammer(sentence)
+    print(res)
+    return JsonResponse({'sentence': res})
