@@ -32,7 +32,8 @@ def find_similar(Input):
     res = sorted(match_list, key=lambda a: a['match'], reverse=True)[:10]
     papers = [r['paper'] for r in res]
     return papers
+if __name__ == '__main__':
 
 
-res = find_similar("EFL learners' use of online reading strategies and comprehension of texts: An exploratory study")
-print(res)
+    res = find_similar("EFL learners' use of online reading strategies and comprehension of texts: An exploratory study")
+    print(res)
