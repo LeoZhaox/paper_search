@@ -37,6 +37,8 @@ def search_terms_with_word_position(term_list):
     tokens = tokens[:-2]
     con_engine = pymysql.connect(host='localhost', user='root', password='ed2021', database='paper', port=3306,
                                  charset='utf8')
+    if tokens == '':
+        return None
     sql_ = "select * from paper_wordposition where word_name in (" + tokens + ");"
     df_data = pd.read_sql(sql_, con_engine)
     return df_data
@@ -44,7 +46,8 @@ def search_terms_with_word_position(term_list):
 
 def TFIDF(str, return_number=100):
     df = search_terms_with_word_position(str)
-    print(df)
+    if df is None:
+        return []
     score_dic = {}
     for index, row in df.iterrows():
         # print(row)
@@ -79,6 +82,6 @@ def TFIDF(str, return_number=100):
 
 if __name__ == '__main__':
     start = time.time()
-    TFIDF('structure, structures include achieve feature, features, classify solve utf-8 utf8')
+    TFIDF('hi')
     end = time.time()
     print('spend', end - start)

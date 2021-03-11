@@ -6,7 +6,7 @@ from paper.models import Paper, QuerySearch
 from rest_framework.response import Response
 from api.serializers import PaperSerializer
 from tf_idf import TFIDF
-from bm25 import BM25
+from bm25_new import BM25
 from django.core.cache import cache
 from Search_function import _query_search
 from datetime import datetime
@@ -32,17 +32,23 @@ def search(request):
     algorithm_type = request.GET.get('algorithm_type', '1')
     key_name = '{}_{}'.format(key, algorithm_type)
     algorithm_type = int(algorithm_type)
+    if algorithm_type == 2:
+        cache.delete('{}_{}'.format(key, 1))
+    else:
+        cache.delete('{}_{}'.format(key, 2))
+    print(key_name)
     papers = cache.get(key_name)
+    print(papers, 'cache')
     if papers is None:
         if algorithm_type == 2:
             papers = BM25(key)
         else:
             papers = TFIDF(key)
-    # 127.0.0.1: 8000 / api / search?key = design & alogorithm = 1 & order = 1 & descend = 1&year=2015-2020&author=abc&venue=ccf
+    # 127.0.0.1: 8000 / api / search?key = design & alogorithm = 1 & order = 1 & descend = 1&year=2015-2020&author=Zelalem Mekuria&venue=ccf
     # alogorithm 1 代表 tfidf， 2代表bm25，order 1 year，2citation；descend 1 降序，2 升序；后面就是按照输入过滤了
     # order: 1:year 2: citation
     # descend: 1 降序 2: 升序
-    # 排序
+    # 排序c
     order_by_date = request.GET.get('order')
     descend = request.GET.get('descend')
     if descend == '1':
@@ -56,20 +62,26 @@ def search(request):
         papers = sorted(papers, key=lambda x: x.n_citation, reverse=descend)
     # filter
     year = request.GET.get('year')
-    if year is not None:
+    print('this is year', year)
+    if year is not None and year != '':
         begin, end = year.split('-')
-        temp = []
+        # if begin==end or begin=='0000':
 
+        temp = []
         for paper in papers:
             # localhost:8000/api/test?key=design&alogorithm=1&order=1&descend=1&year=2013-2014
             # localhost:8000/api/test?key=design&alogorithm=1&order=1&descend=1
-            begin_date = datetime(year=int(begin), month=1, day=1, tzinfo=pytz.utc)
-            end_date = datetime(year=int(end), month=1, day=1, tzinfo=pytz.utc)
-            if paper.year <= end_date and paper.year >= begin_date:
-                temp.append(paper)
+            try:
+                begin_date = datetime(year=int(begin), month=1, day=1, tzinfo=pytz.utc)
+                end_date = datetime(year=int(end), month=1, day=1, tzinfo=pytz.utc)
+                if paper.year <= end_date and paper.year >= begin_date:
+                    temp.append(paper)
+            except Exception:
+                temp = []
+                break
         papers = temp
     author = request.GET.get('author')
-    if author is not None:
+    if author is not None and author != '':
         temp = []
         for paper in papers:
             exist = paper.authors.filter(name=author).exists()
@@ -79,7 +91,7 @@ def search(request):
                 temp.append(paper)
         papers = temp
     venue = request.GET.get('venue')
-    if venue is not None:
+    if venue is not None and venue != '':
         temp = []
         for paper in papers:
             if paper.venue == venue:
