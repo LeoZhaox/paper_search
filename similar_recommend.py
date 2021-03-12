@@ -21,7 +21,7 @@ def find_similar(Input):
         # 计算TF系数
         return np.dot(vectors[0], vectors[1]) / (norm(vectors[0]) * norm(vectors[1]))
 
-    doc_list = Paper.objects.filter(abstract__isnull=False).order_by('-n_citation')[:5000]
+    doc_list = Paper.objects.filter(~Q(abstract=""), abstract__isnull=False).order_by('-n_citation')[:5000]
     match_list = []
     for paper in doc_list:
         title = paper.title
@@ -32,8 +32,9 @@ def find_similar(Input):
     res = sorted(match_list, key=lambda a: a['match'], reverse=True)[:10]
     papers = [r['paper'] for r in res]
     return papers
+
+
 if __name__ == '__main__':
-
-
-    res = find_similar("EFL learners' use of online reading strategies and comprehension of texts: An exploratory study")
+    res = find_similar(
+        "EFL learners' use of online reading strategies and comprehension of texts: An exploratory study")
     print(res)

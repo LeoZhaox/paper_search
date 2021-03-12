@@ -186,6 +186,14 @@ def similarity_paper(request):
 
 
 @api_view(['GET'])
+def author_paper(request):
+    author_name = request.GET.get('name')
+    papers = Paper.objects.filter(authors__name=author_name)
+    serializer = PaperSerializer(papers, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
 def check_grammar(request):
     sentence = request.GET.get('sentence')
     res = check_grammer(sentence)
