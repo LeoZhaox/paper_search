@@ -172,7 +172,7 @@ def auto_query_suggestion(request):
     res = " ".join(search_res.words)
     print('res',res)
     # serializer = WordsSerializer(search_res)
-    return JsonResponse({'value': res})
+    return Response({'value': res})
 
 
 @api_view(['GET'])
