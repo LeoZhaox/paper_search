@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from paper.models import Paper, Author
+from paper.models import Paper, Author, QuerySearch
 
 
 class AuthorSerializer(serializers.ModelSerializer):
@@ -46,6 +46,12 @@ class CitationSerializer(serializers.ModelSerializer):
         if obj.n_citation is None:
             return 0
         return obj.n_citation
+
+
+class WordsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuerySearch
+        fields = ['words']
 
 
 class PaperSerializer(serializers.ModelSerializer):

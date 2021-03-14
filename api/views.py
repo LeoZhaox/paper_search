@@ -4,7 +4,7 @@ import time
 from rest_framework.decorators import api_view
 from paper.models import Paper, QuerySearch
 from rest_framework.response import Response
-from api.serializers import PaperSerializer
+from api.serializers import PaperSerializer, WordsSerializer
 from tf_idf import TFIDF
 from bm25_new import BM25
 from django.core.cache import cache
@@ -168,12 +168,11 @@ def auto_query_suggestion(request):
     n_words = _query_search(_input)
     print('n_words', n_words)
     search_res = QuerySearch.objects.get(word=n_words)
-    paper_ids = search_res.papers
-    print('paper ids', paper_ids)
-    'apple_tree'
-    papers = Paper.objects.filter(id__in=paper_ids)
-    serializer = PaperSerializer(papers, many=True)
-    return Response(serializer.data)
+    print('search_res.words',search_res.words)
+    res = " ".join(search_res.words)
+    print('res',res)
+    # serializer = WordsSerializer(search_res)
+    return JsonResponse({'value': res})
 
 
 @api_view(['GET'])

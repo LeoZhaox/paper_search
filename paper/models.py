@@ -38,5 +38,5 @@ class PaperLength(models.Model):
 
 
 class QuerySearch(models.Model):
-    word = models.CharField(verbose_name='word', max_length=512,unique=True)
-    papers = models.JSONField(verbose_name='papers_id')
+    word = models.CharField(verbose_name='word', max_length=512, unique=True)
+    words = models.JSONField(verbose_name='res_words')

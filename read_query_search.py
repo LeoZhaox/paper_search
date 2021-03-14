@@ -17,10 +17,14 @@ def read_csv(filename):
         for r in reader:
             word_input, ids = r
             ids = ids.split(';')
-            paper_len = QuerySearch.objects.create(word=word_input, papers=ids)
-            number += 1
-            print('created', number)
+            try:
+                paper_len = QuerySearch.objects.create(word=word_input, words=ids)
+                number += 1
+                print('created', number)
+            except IntegrityError:
+                pass
+
 
 
 QuerySearch.objects.all().delete()
-read_csv('query_suggestions.csv')
+read_csv('query_suggestions_updated.csv')
