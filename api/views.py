@@ -158,21 +158,22 @@ def test(request):
     return Response(serializer.data)
 
 
-# def list_history():
-# redis.set(''
+
 @api_view(['GET'])
 def auto_query_suggestion(request):
     # Get the input *
     _input = request.GET.get('key')
     # search the data base and get the recommended id list
     n_words = _query_search(_input)
-    print('n_words', n_words)
     search_res = QuerySearch.objects.get(word=n_words)
-    print('search_res.words',search_res.words)
-    res = " ".join(search_res.words)
-    print('res',res)
-    # serializer = WordsSerializer(search_res)
-    return Response({'value': res})
+    print(search_res.words)
+    return_list = []
+    for i in range(len(search_res.words)):
+        temp = {'value':search_res.words[i]}
+        return_list.append(temp)
+    print(return_list)
+    # serializer = WordsSerializer(return_list)
+    return Response(return_list)
 
 
 @api_view(['GET'])

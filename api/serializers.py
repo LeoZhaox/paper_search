@@ -49,6 +49,7 @@ class CitationSerializer(serializers.ModelSerializer):
 
 
 class WordsSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = QuerySearch
         fields = ['words']
