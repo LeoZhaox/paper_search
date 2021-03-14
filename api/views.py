@@ -166,10 +166,10 @@ def auto_query_suggestion(request):
     # search the data base and get the recommended id list
     n_words = _query_search(_input)
     search_res = QuerySearch.objects.get(word=n_words)
-    print(search_res.words)
+    # print(search_res.words)
     return_list = []
     for i in range(len(search_res.words)):
-        temp = {'value':search_res.words[i]}
+        temp = {'value': _input +" "+ search_res.words[i]}
         return_list.append(temp)
     print(return_list)
     # serializer = WordsSerializer(return_list)
