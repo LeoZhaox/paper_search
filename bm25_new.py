@@ -12,7 +12,7 @@ import math
 import pandas as pd
 import pymysql
 import re
-
+import time
 from paper.models import Paper
 
 total_document_number = 100000
@@ -101,11 +101,3 @@ def BM25(str, return_number=100):
     paper_objects = Paper.objects.filter(id__in=paper_ids)
     # print([p.id for p in paper_objects])
     return paper_objects
-
-
-import time
-if __name__ == '__main__':
-    start = time.time()
-    BM25('heterogen')
-    end = time.time()
-    print('spend', end - start)

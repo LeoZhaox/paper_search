@@ -29,22 +29,36 @@ def detail(request, paper_id):
 @api_view(['GET'])
 def search(request):
     key = request.GET.get('key')
-    algorithm_type = request.GET.get('algorithm_type', '1')
+    algorithm_type = request.GET.get('algorithm_type')
+    print('we get algorithm_type', algorithm_type)
+    if algorithm_type != '2':
+        algorithm_type = '1'
     key_name = '{}_{}'.format(key, algorithm_type)
+    print('algorithm_type', algorithm_type)
     algorithm_type = int(algorithm_type)
     if algorithm_type == 2:
         cache.delete('{}_{}'.format(key, 1))
+        print('this is bm25')
     else:
         cache.delete('{}_{}'.format(key, 2))
+        print('this is tfidf')
     print(key_name)
     papers = cache.get(key_name)
     print(papers, 'cache')
     if papers is None:
         if algorithm_type == 2:
+            print('invoke BM25 algorithm')
+            start = time.time()
             papers = BM25(key)
+            end = time.time()
+            print('BM25 spend', end - start)
         else:
+            print('invoke TFIDF algorithm')
+            start = time.time()
             papers = TFIDF(key)
-    # 127.0.0.1: 8000 / api / search?key = design & alogorithm = 1 & order = 1 & descend = 1&year=2015-2020&author=Zelalem Mekuria&venue=ccf
+            end = time.time()
+            print('TFIDF spend', end - start)
+    # 127.0.0.1: 8000 / api / search?key = design & algorithm_type_type = 1 & order = 1 & descend = 1&year=2015-2020&author=Zelalem Mekuria&venue=ccf
     # alogorithm 1 代表 tfidf， 2代表bm25，order 1 year，2citation；descend 1 降序，2 升序；后面就是按照输入过滤了
     # order: 1:year 2: citation
     # descend: 1 降序 2: 升序
@@ -98,12 +112,9 @@ def search(request):
                 temp.append(paper)
         papers = temp
     #
-    # History.objects.create();
-
-    'localhost:8000/search?key=nlp&algorithm_type=1'
-    'localhost:8000/search?key=nlp'
+    # History.objects.create()
     # print('key', key)
-    # print('algorithm', algorithm_type)
+    # print('algorithm_type', algorithm_type)
     serializer = PaperSerializer(papers, many=True)
     return Response(serializer.data)
 
@@ -158,7 +169,6 @@ def test(request):
     return Response(serializer.data)
 
 
-
 @api_view(['GET'])
 def auto_query_suggestion(request):
     # Get the input *
@@ -169,7 +179,7 @@ def auto_query_suggestion(request):
     # print(search_res.words)
     return_list = []
     for i in range(len(search_res.words)):
-        temp = {'value': _input +" "+ search_res.words[i]}
+        temp = {'value': _input + " " + search_res.words[i]}
         return_list.append(temp)
     print(return_list)
     # serializer = WordsSerializer(return_list)

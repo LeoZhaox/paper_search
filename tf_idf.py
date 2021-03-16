@@ -74,14 +74,14 @@ def TFIDF(str, return_number=100):
     # print(paper_ids)
     # print(len(paper_ids))
     paper_objects = Paper.objects.filter(id__in=paper_ids)[:return_number]
-    print(len(paper_objects))
-    print([p.id for p in paper_objects])
+    # print(len(paper_objects))
+    # print([p.id for p in paper_objects])
     return paper_objects
-    print(sorted_score_list)
+    # print(sorted_score_list)
 
 
 if __name__ == '__main__':
     start = time.time()
-    TFIDF('hi')
+    TFIDF('heterogen')
     end = time.time()
-    print('spend', end - start)
+    # print('spend', end - start)
