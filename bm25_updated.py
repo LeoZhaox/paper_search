@@ -1,3 +1,5 @@
+import time
+
 from django.shortcuts import render
 import django
 import os
@@ -12,11 +14,10 @@ import math
 import pandas as pd
 import pymysql
 import re
-import time
+
 from paper.models import Paper
 
 total_document_number = 100000
-
 
 def search_terms_with_position(term_list):
     combine_list_fixed = []
@@ -43,58 +44,33 @@ def search_terms_with_position(term_list):
     # print('after querying', query_list)
     return df_data
 
+
+
 def BM25(str, return_number=100):
     df_1 = search_terms_with_position(str)
-    print(df_1)
-    con_engine = pymysql.connect(host='localhost', user='root', password='ed2021', database='paper', port=3306,
-                                 charset='utf8')
-
     score_dic = {}
-    for index, row in df_1.iterrows():
-        # print(row)
-        # print(row['token'])
-        df = int(row['frequency'])
-        # print(row['position'])
-        documents = row['tf_idf'].split(';')
-        documents = documents[:-1]
-        ids = '\''
-        for doc in documents:
-            # print(doc)
-            id_tf_position = doc.split(':')
-            # print(id_tf_position)
-            id = id_tf_position[0][1:]
-
-            ids = ids + id + "','"
-    ids = ids[:-2]
-    sql_ = "select * from paper_paperlength Where paper_id in (" + ids + ");"
-    # print(sql_)
-    df_length = pd.read_sql(sql_, con_engine)
-    sql_ = "select * from paper_paperlength;"
-    df_data = pd.read_sql(sql_, con_engine)
-    L_mean = df_data.mean(axis=0)[1]
-    print('L_mean',L_mean)
+    L_mean = 36.50346
 
     for index, row in df_1.iterrows():
         # print(row)
         # print(row['token'])
         df = int(row['frequency'])
-        # print(row['position'])
         documents = row['tf_idf'].split(';')
         documents = documents[:-1]
         for doc in documents:
-            # print(doc)
-            id_tf_position = doc.split(':')
-            # print(id_tf_position)
-            id = id_tf_position[0][1:]
-            tf = int(id_tf_position[1])
-            L = df_length[df_length.paper_id == id].length.iloc[0]
+            print(doc)
+            id_len_tf_position = doc.split(':')
+            print(id_len_tf_position)
+            id = id_len_tf_position[0][1:]
+            tf = int(id_len_tf_position[2])
+            L = int(id_len_tf_position[1])
             if id not in score_dic.keys():
                 score_dic[id] = math.log((total_document_number - df + 0.5) / (df + 0.5), 10) * (
                             tf / (1.5 * (L / L_mean) + tf + 0.5))
             else:
                 score_dic[id] = math.log((total_document_number - df + 0.5) / (df + 0.5), 10) * (
                             tf / (1.5 * (L / L_mean) + tf + 0.5))
-    sorted_score_list = sorted(score_dic.items(), key=lambda x: x[1], reverse=True)
+    sorted_score_list = sorted(score_dic.items(), key=lambda x: x[1], reverse = True)
     if len(sorted_score_list) > return_number:
         sorted_score_list = sorted_score_list[:return_number]
     paper_ids = [paper[0] for paper in sorted_score_list]
@@ -104,5 +80,9 @@ def BM25(str, return_number=100):
     # print([p.id for p in paper_objects])
     return paper_objects
 
+if __name__ == '__main__':
+    start = time.time()
+    BM25('heterogen')
+    end = time.time()
+    print('spend', end - start)
 
-BM25('heterogen')

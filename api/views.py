@@ -5,8 +5,8 @@ from rest_framework.decorators import api_view
 from paper.models import Paper, QuerySearch
 from rest_framework.response import Response
 from api.serializers import PaperSerializer, WordsSerializer
-from tf_idf import TFIDF
-from bm25_new import BM25
+from tf_idf_updated import TFIDF
+from bm25_updated import BM25
 from django.core.cache import cache
 from Search_function import _query_search
 from datetime import datetime
@@ -175,12 +175,16 @@ def auto_query_suggestion(request):
     _input = request.GET.get('key')
     # search the data base and get the recommended id list
     n_words = _query_search(_input)
-    search_res = QuerySearch.objects.get(word=n_words)
-    # print(search_res.words)
     return_list = []
-    for i in range(len(search_res.words)):
-        temp = {'value': _input + " " + search_res.words[i]}
-        return_list.append(temp)
+
+    try:
+        search_res = QuerySearch.objects.get(word=n_words)
+        for i in range(len(search_res.words)):
+            temp = {'value': _input + " " + search_res.words[i]}
+            return_list.append(temp)
+    except Exception:
+        return_list = []
+        pass
     print(return_list)
     # serializer = WordsSerializer(return_list)
     return Response(return_list)
@@ -198,7 +202,10 @@ def similarity_paper(request):
 @api_view(['GET'])
 def author_paper(request):
     author_name = request.GET.get('name')
-    papers = Paper.objects.filter(authors__name=author_name)
+    if author_name is not None:
+        papers = Paper.objects.filter(authors__name=author_name)
+    else:
+        papers = []
     serializer = PaperSerializer(papers, many=True)
     return Response(serializer.data)
 
