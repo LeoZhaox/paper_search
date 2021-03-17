@@ -1,19 +1,20 @@
+from django.shortcuts import render
 import django
 import os
-import time
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'paper_search.settings')
 django.setup()
-import pymysql
-from nltk import PorterStemmer
-
-from paper.models import Paper
+# Create your views here.
+import time
+from nltk.stem.porter import PorterStemmer
 import math
 import pandas as pd
-
-total_document_number = 100000
+import pymysql
 import re
 
+from paper.models import Paper
+
+total_document_number = 100000
 
 def search_terms_with_position(term_list):
     combine_list_fixed = []
@@ -41,43 +42,66 @@ def search_terms_with_position(term_list):
     return df_data
 
 
-def TFIDF(str, return_number=100):
-    df = search_terms_with_position(str)
-    # print(df)
+
+def BM25(str, return_number=100):
+    df_1 = search_terms_with_position(str)
     score_dic = {}
-    for index, row in df.iterrows():
+    # for index, row in df_1.iterrows():
+    #     # print(row)
+    #     # print(row['token'])
+    #     df = int(row['document_frequency'])
+    #     print(row['position'])
+    #     documents = row['position'].split(';')
+    #     documents = documents[:-1]
+    #     ids = '\''
+    #     for doc in documents:
+    #         print(doc)
+    #         id_tf_position = doc.split(':')
+    #         print(id_tf_position)
+    #         id = id_tf_position[0][1:]
+    #
+    #         ids = ids + id + "','"
+    # ids = ids[:-2]
+    # sql_ = "select * from doc_length Where doc_id in (" + ids + ");"
+    # print(sql_)
+    # df_length = pd.read_sql(sql_, con_engine)
+    # sql_ = "select * from doc_length;"
+    # df_data = pd.read_sql(sql_, con_engine)
+    # L_mean = df_data.mean(axis=0)[0]
+    L_mean = 36.50346
+
+    for index, row in df_1.iterrows():
         # print(row)
         # print(row['token'])
         df = int(row['frequency'])
+        # print(row['tf_idf'])
         documents = row['tf_idf'].split(';')
         documents = documents[:-1]
-        # print(documents)
         for doc in documents:
             # print(doc)
             id_len_tf_position = doc.split(':')
             # print(id_len_tf_position)
             id = id_len_tf_position[0][1:]
             tf = int(id_len_tf_position[2])
-
+            L = int(id_len_tf_position[1])
             if id not in score_dic.keys():
-                score_dic[id] = (1 + math.log(tf, 10)) * math.log(total_document_number / df, 10)
+                score_dic[id] = math.log((total_document_number - df + 0.5) / (df + 0.5), 10) * (tf / (1.5 * (L / L_mean) + tf + 0.5))
             else:
-                score_dic[id] = score_dic[id] + (1 + math.log(tf, 10)) * math.log(total_document_number / df, 10)
-    sorted_score_list = sorted(score_dic.items(), key=lambda x: x[1], reverse=True)
+                score_dic[id] = score_dic[id]+math.log((total_document_number - df + 0.5) / (df + 0.5), 10) * (
+                            tf / (1.5 * (L / L_mean) + tf + 0.5))
+    sorted_score_list = sorted(score_dic.items(), key=lambda x: x[1], reverse = True)
     if len(sorted_score_list) > return_number:
         sorted_score_list = sorted_score_list[:return_number]
     paper_ids = [paper[0] for paper in sorted_score_list]
     # print(paper_ids)
     # print(len(paper_ids))
-    paper_objects = Paper.objects.filter(id__in=paper_ids)[:return_number]
-    # print(len(paper_objects))
+    paper_objects = Paper.objects.filter(id__in=paper_ids)
     # print([p.id for p in paper_objects])
     return paper_objects
-    # print(sorted_score_list)
-
 
 if __name__ == '__main__':
     start = time.time()
-    TFIDF('heterogen')
+    BM25('heterogen')
     end = time.time()
     print('spend', end - start)
+

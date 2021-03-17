@@ -6,7 +6,7 @@ from paper.models import Paper, QuerySearch
 from rest_framework.response import Response
 from api.serializers import PaperSerializer, WordsSerializer
 from tf_idf_updated import TFIDF
-from bm25_updated import BM25
+from bm25 import BM25
 from django.core.cache import cache
 from Search_function import _query_search
 from datetime import datetime
