@@ -101,7 +101,7 @@ def BM25(str, return_number=100):
 
 if __name__ == '__main__':
     start = time.time()
-    BM25('heterogen')
+    BM25('structure')
     end = time.time()
-    print('spend', end - start)
+    print('TFIDF spend', end - start)
 

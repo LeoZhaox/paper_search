@@ -173,14 +173,17 @@ def test(request):
 def auto_query_suggestion(request):
     # Get the input *
     _input = request.GET.get('key')
+    Process_input = _input.strip()
+    print(Process_input)
     # search the data base and get the recommended id list
     n_words = _query_search(_input)
-    return_list = []
+    print('n_words',n_words)
 
+    return_list = []
     try:
         search_res = QuerySearch.objects.get(word=n_words)
         for i in range(len(search_res.words)):
-            temp = {'value': _input + " " + search_res.words[i]}
+            temp = {'value': Process_input + " " + search_res.words[i]}
             return_list.append(temp)
     except Exception:
         return_list = []

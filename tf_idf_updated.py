@@ -78,6 +78,6 @@ def TFIDF(str, return_number=100):
 
 if __name__ == '__main__':
     start = time.time()
-    TFIDF('heterogen')
+    TFIDF('structure')
     end = time.time()
-    print('spend', end - start)
+    print('BM25 spends', end - start)
